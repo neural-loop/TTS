@@ -212,10 +212,10 @@ def mary_tts_api_locales():
 
 @app.route("/get_voices", methods=["GET"])
 def get_voices():
-    with open("model/config.json", "r") as file:
+    with open("config.json", "r") as file:
         model_data = json.load(file)
 
-    with open("model/speakers-log.json", "r") as file:
+    with open("speakers-log.json", "r") as file:
         speakers_data = json.load(file)
 
     voice_details = []
