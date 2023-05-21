@@ -24,59 +24,46 @@
         .right-column {
             flex: 1; /* Occupy remaining horizontal space */
         }
+
     </style>
 </head>
 <body>
 <div class="container">
     <div class="left-column">
         <!-- Left Column - Empty Container -->
-        <p>VCTK_p225: 23 year old female, English accent (Southern England)<audio controls><source src="https://huggingface.co/voices/VCTK_European_English_Females/resolve/main/samples/p225.wav" type="audio/wav"></audio> </p>
-<p>VCTK_p228: 22 year old female, English accent (Southern England)<audio controls><source src="https://huggingface.co/voices/VCTK_European_English_Females/resolve/main/samples/p228.wav" type="audio/wav"></audio> </p>
-<p>VCTK_p229: 23 year old female, English accent (Southern England)<audio controls><source src="https://huggingface.co/voices/VCTK_European_English_Females/resolve/main/samples/p229.wav" type="audio/wav"></audio> </p>
-<p>VCTK_p230: 22 year old female, English accent (Stockton-on-tees)<audio controls><source src="https://huggingface.co/voices/VCTK_European_English_Females/resolve/main/samples/p230.wav" type="audio/wav"></audio> </p>
-<p>VCTK_p231: 23 year old female, English accent (Southern England)<audio controls><source src="https://huggingface.co/voices/VCTK_European_English_Females/resolve/main/samples/p231.wav" type="audio/wav"></audio> </p>
-<p>VCTK_p233: 23 year old female, English accent (Staffordshire)<audio controls><source src="https://huggingface.co/voices/VCTK_European_English_Females/resolve/main/samples/p233.wav" type="audio/wav"></audio> </p>
-<p>VCTK_p236: 23 year old female, English accent (Manchester)<audio controls><source src="https://huggingface.co/voices/VCTK_European_English_Females/resolve/main/samples/p236.wav" type="audio/wav"></audio> </p>
-<p>VCTK_p239: 22 year old female, English accent (Southwest England)<audio controls><source src="https://huggingface.co/voices/VCTK_European_English_Females/resolve/main/samples/p239.wav" type="audio/wav"></audio> </p>
-<p>VCTK_p240: 21 year old female, English accent (Southern England)<audio controls><source src="https://huggingface.co/voices/VCTK_European_English_Females/resolve/main/samples/p240.wav" type="audio/wav"></audio> </p>
-<p>VCTK_p244: 22 year old female, English accent (Manchester)<audio controls><source src="https://huggingface.co/voices/VCTK_European_English_Females/resolve/main/samples/p244.wav" type="audio/wav"></audio> </p>
-<p>VCTK_p250: 22 year old female, English accent (Southeast England)<audio controls><source src="https://huggingface.co/voices/VCTK_European_English_Females/resolve/main/samples/p250.wav" type="audio/wav"></audio> </p>
-<p>VCTK_p257: 24 year old female, English accent (Southern England)<audio controls><source src="https://huggingface.co/voices/VCTK_European_English_Females/resolve/main/samples/p257.wav" type="audio/wav"></audio> </p>
-<p>VCTK_p267: 23 year old female, English accent (Yorkshire)<audio controls><source src="https://huggingface.co/voices/VCTK_European_English_Females/resolve/main/samples/p267.wav" type="audio/wav"></audio> </p>
-<p>VCTK_p268: 23 year old female, English accent (Southern England)<audio controls><source src="https://huggingface.co/voices/VCTK_European_English_Females/resolve/main/samples/p268.wav" type="audio/wav"></audio> </p>
-<p>VCTK_p269: 20 year old female, English accent (Newcastle)<audio controls><source src="https://huggingface.co/voices/VCTK_European_English_Females/resolve/main/samples/p269.wav" type="audio/wav"></audio> </p>
-<p>VCTK_p276: 24 year old female, English accent (Oxford)<audio controls><source src="https://huggingface.co/voices/VCTK_European_English_Females/resolve/main/samples/p276.wav" type="audio/wav"></audio> </p>
-<p>VCTK_p277: 23 year old female, English accent (Northeast England)<audio controls><source src="https://huggingface.co/voices/VCTK_European_English_Females/resolve/main/samples/p277.wav" type="audio/wav"></audio> </p>
-<p>VCTK_p282: 23 year old female, English accent (Newcastle)<audio controls><source src="https://huggingface.co/voices/VCTK_European_English_Females/resolve/main/samples/p282.wav" type="audio/wav"></audio> </p>
+        <div id="voice-details-container"></div>
     </div>
     <div class="right-column">
         <div class="text-center">
             <img class="mt-5" src="{{url_for('static', filename='logo.png')}}" align="middle" width="512"/>
             <ul class="list-unstyled"></ul>
             {%if use_gst%}
-            <input value='{"0": 0.1}' id="style_wav" placeholder="style wav (dict or path to wav).." size=45 type="text" name="style_wav">
+            <input value='{"0": 0.1}' id="style_wav" placeholder="style wav (dict or path to wav).." size=45 type="text"
+                   name="style_wav">
             {%endif%}
             <input id="text" placeholder="Type here..." size=45 type="text" name="text">
             <button id="speak-button" name="speak" class="btn btn-primary">Speak</button>
             <br/><br/>
             {%if use_multi_speaker%}
             Choose a speaker:
-            <select id="speaker_id" name=speaker_id method="GET" action="/">
-                {% for speaker_id in speaker_ids %}
-                <option value="{{speaker_id}}" SELECTED>{{speaker_id}}</option>
-                "
-                {% endfor %}
-            </select><br/><br/>
+                <select id="speaker_id" name=speaker_id method="GET" action="/">
+                  {% for speaker_id in speaker_ids %}
+                    {% if speaker_id.startswith("VCTK_") %}
+                      <option value="{{speaker_id}}" SELECTED>{{speaker_id}}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select><br/><br/>
             {%endif%}
-            {%if use_multi_language%}
-            Choose a language:
-            <select id="language_id" name=language_id method="GET" action="/">
-                {% for language_id in language_ids %}
-                <option value="{{language_id}}" SELECTED>{{language_id}}</option>
-                "
-                {% endfor %}
-            </select><br/><br/>
-            {%endif%}
+            <!-- Temporary debug statement -->
+<!--            {%if use_multi_language%}-->
+<!--            Choose a language:-->
+<!--            <select id="language_id" name=language_id method="GET" action="/">-->
+<!--                {% for language_id in language_ids %}-->
+<!--                <option value="{{language_id}}" SELECTED>{{language_id}}</option>-->
+<!--                "-->
+<!--                {% endfor %}-->
+<!--            </select><br/><br/>-->
+<!--            {%endif%}-->
             {%if show_details%}
             <button id="details-button" onclick="location.href = 'details'" name="model-details">Model Details</button>
             <br/><br/>
@@ -131,6 +118,55 @@
                 q('#speak-button').disabled = false
             })
     }
+      // Function to make an AJAX request and update the voice details container
+function updateVoiceDetails() {
+  // Create a new XMLHttpRequest object
+  var xhr = new XMLHttpRequest();
+
+  // Configure the request
+  xhr.open("GET", "/get_voices", true);
+
+  // Define the callback function to handle the response
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      // Parse the response as JSON
+      var response = JSON.parse(xhr.responseText);
+
+      // Build the HTML string for the voice details
+ var voiceDetailsHTML = "";
+for (var i = 0; i < response.length; i++) {
+  var speaker = response[i];
+  var speakerHTML =
+    '<p>' +
+    speaker.speaker_id +
+    ': ' +
+    speaker.age +
+    ' year old ' +
+    speaker.gender +
+    ', ' +
+    speaker.accents +
+    ' accent (' +
+    speaker.region +
+    ')</p>' +
+    '<audio controls><source src="https://huggingface.co/voices/VCTK_European_English_Females/resolve/main/samples/' +
+    speaker.speaker_id +
+    '.wav" type="audio/wav"></audio>';
+  voiceDetailsHTML += speakerHTML;
+}
+      voiceDetailsHTML += "</pre>";
+
+      // Update the voice details container with the HTML
+      document.getElementById("voice-details-container").innerHTML = voiceDetailsHTML;
+    }
+  };
+
+  // Send the request
+  xhr.send();
+}
+
+// Call the updateVoiceDetails function when the page finishes loading
+window.addEventListener("load", updateVoiceDetails);
+
 </script>
 </body>
 </html>

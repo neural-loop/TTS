@@ -9,7 +9,7 @@ from threading import Lock
 from typing import Union
 from urllib.parse import parse_qs
 
-from flask import Flask, render_template, render_template_string, request, send_file
+from flask import Flask, render_template, render_template_string, request, send_file, jsonify
 
 from TTS.config import load_config
 from TTS.utils.manage import ModelManager
@@ -210,6 +210,22 @@ def mary_tts_api_locales():
         model_details = ["", "en", "", "default"]
     return render_template_string("{{ locale }}\n", locale=model_details[1])
 
+@app.route("/get_voices", methods=["GET"])
+def get_voices():
+    with open("speakers-log.json", "r") as file:
+        speakers_data = json.load(file)
+
+    voice_details = []
+    for speaker_id, speaker_info in speakers_data.items():
+        voice_details.append({
+            "speaker_id": speaker_id,
+            "age": speaker_info["age"],
+            "gender": speaker_info["gender"],
+            "accents": speaker_info["accents"],
+            "region": speaker_info["region"]
+        })
+
+    return jsonify(voice_details)
 
 @app.route("/voices", methods=["GET"])
 def mary_tts_api_voices():
