@@ -177,7 +177,7 @@ function updateVoiceDetails() {
 
       // Call the getModels function to fetch the models information
       getModels(function (models) {
-        var dropdownHTML = "";
+        var dropdownHTML = "<option value=''>Jump to...</option>"
         var currentModelPage = getCurrentModelPage();
         for (var j = 0; j < models.length; j++) {
           var model = models[j];
