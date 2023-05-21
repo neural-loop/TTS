@@ -149,7 +149,7 @@ for (var i = 0; i < response.length; i++) {
     ' accent (' +
     speaker.region +
     ')</p>' +
-    '<audio controls><source src="https://huggingface.co/voices/VCTK_European_English_Females/resolve/main/samples/' +
+    '<audio controls><source src="https://huggingface.co/voices/' + speaker.project + '/resolve/main/samples/' +
     speaker.speaker_id +
     '.wav" type="audio/wav"></audio>';
   voiceDetailsHTML += speakerHTML;

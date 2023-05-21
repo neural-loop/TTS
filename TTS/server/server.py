@@ -212,6 +212,9 @@ def mary_tts_api_locales():
 
 @app.route("/get_voices", methods=["GET"])
 def get_voices():
+    with open("model/config.json", "r") as file:
+        model_data = json.load(file)
+
     with open("model/speakers-log.json", "r") as file:
         speakers_data = json.load(file)
 
@@ -222,7 +225,8 @@ def get_voices():
             "age": speaker_info["age"],
             "gender": speaker_info["gender"],
             "accents": speaker_info["accents"],
-            "region": speaker_info["region"]
+            "region": speaker_info["region"],
+            "project": model_data["project_name"],
         })
 
     return jsonify(voice_details)
