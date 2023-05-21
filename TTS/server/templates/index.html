@@ -203,8 +203,10 @@ function updateVoiceDetails() {
 // Function to handle the model selection change
 function onModelSelectChange() {
   var selectedModel = document.getElementById("model-dropdown").value;
+  var modelName = selectedModel.split("/").pop();
+  var modelUrl = "https://voices-" + modelName.toLowerCase().replace(/_/g, "-") + ".hf.space/";
   // Redirect to the selected model page
-  window.location.href = "/spaces/voices/" + selectedModel;
+  window.location.href = modelUrl;
 }
 
 // Call the updateVoiceDetails function when the page finishes loading
