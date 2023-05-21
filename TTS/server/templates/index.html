@@ -24,7 +24,22 @@
         .right-column {
             flex: 1; /* Occupy remaining horizontal space */
         }
+      .card {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        width: 300px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-bottom: 10px;
+      }
 
+      .select-button {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+      }
     </style>
 </head>
 <body>
@@ -147,29 +162,43 @@ function updateVoiceDetails() {
       var response = JSON.parse(xhr.responseText);
 
       // Build the HTML string for the voice details
-      var voiceDetailsHTML = "";
-      for (var i = 0; i < response.length; i++) {
-        var speaker = response[i];
-        var speakerHTML =
-          "<p>" +
-          speaker.speaker_id +
-          ": " +
-          speaker.age +
-          " year old " +
-          speaker.gender +
-          ", " +
-          speaker.accents +
-          " accent (" +
-          speaker.region +
-          ")</p>" +
-          '<audio controls><source src="https://huggingface.co/voices/' +
-          speaker.project +
-          '/resolve/main/samples/' +
-          speaker.speaker_id +
-          '.wav" type="audio/wav"></audio>';
-        voiceDetailsHTML += speakerHTML;
-      }
-      voiceDetailsHTML += "</pre>";
+            var voiceDetailsHTML = "";
+            for (var i = 0; i < response.length; i++) {
+              var speaker = response[i];
+              var speakerHTML =
+                '<div class="card">' +
+                '<div class="label-info">' +
+                '<p>' +
+                speaker.speaker_id +
+                ": " +
+                speaker.age +
+                " year old " +
+                speaker.gender +
+                ", " +
+                speaker.accents +
+                " accent (" +
+                speaker.region +
+                ")</p>" +
+                "</div>" +
+                '<div class="player">' +
+                '<audio controls>' +
+                '<source src="https://huggingface.co/voices/' +
+                speaker.project +
+                '/resolve/main/samples/' +
+                speaker.speaker_id +
+                '.wav" type="audio/wav">' +
+                "</audio>" +
+                "</div>" +
+                '<div class="select-button">' +
+                '<select id="speaker_id" name="speaker_id" method="GET" action="/">' +
+                '<option value="">' +
+                speaker.speaker_id +
+                "</option>" +
+                "</select>" +
+                "</div>" +
+                "</div>";
+              voiceDetailsHTML += speakerHTML;
+            }
 
       // Update the voice details container with the HTML
       document.getElementById("voice-details-container").innerHTML =
