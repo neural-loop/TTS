@@ -69,6 +69,7 @@
 
             <audio id="audio" controls autoplay hidden></audio>
             <p id="message"></p>
+            <p id="current-model">Currently evaluating:</p>
             Jump to: <select id="model-dropdown"></select>
         </div>
     </div>
@@ -176,22 +177,29 @@ function updateVoiceDetails() {
 
       // Call the getModels function to fetch the models information
       getModels(function (models) {
-        var dropdownHTML = "<option name=\"Switch to another model\"></option>";
+        var dropdownHTML = "";
+        var currentModelPage = getCurrentModelPage();
         for (var j = 0; j < models.length; j++) {
           var model = models[j];
           var modelName = model.id.split("/").pop();
           if (modelName.startsWith("VCTK_")) {
-            dropdownHTML +=
-              '<option value="' +
-              model.id +
-              '">' +
-              modelName +
-              "</option>";
+            if (modelName !== currentModelPage) {
+              dropdownHTML +=
+                '<option value="' +
+                model.id +
+                '">' +
+                modelName +
+                "</option>";
+            }
           }
         }
 
         // Update the model dropdown with the HTML
         document.getElementById("model-dropdown").innerHTML = dropdownHTML;
+
+        // Update the current model paragraph
+        document.getElementById("current-model").textContent =
+          "Currently evaluating: " + currentModelPage;
       });
     }
   };
@@ -207,6 +215,17 @@ function onModelSelectChange() {
   var modelUrl = "https://voices-" + modelName.toLowerCase().replace(/_/g, "-") + ".hf.space/";
   // Redirect to the selected model page
   window.location.href = modelUrl;
+}
+
+function getCurrentModelPage() {
+  var currentUrl = window.location.href;
+  var modelPageRegex = /https:\/\/voices-(.*).hf.space/;
+  var match = currentUrl.match(modelPageRegex);
+  if (match && match.length > 1) {
+    var modelName = match[1];
+    return "voices/" + modelName.replace(/-/g, "_");
+  }
+  return "";
 }
 
 // Call the updateVoiceDetails function when the page finishes loading
