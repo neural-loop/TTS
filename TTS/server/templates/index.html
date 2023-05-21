@@ -69,7 +69,7 @@
 
             <audio id="audio" controls autoplay hidden></audio>
             <p id="message"></p>
-            Jump to: <select id="model-dropdown"><option name="Switch to another model"></option></select>
+            Jump to: <select id="model-dropdown"></select>
         </div>
     </div>
 </div>
@@ -176,7 +176,7 @@ function updateVoiceDetails() {
 
       // Call the getModels function to fetch the models information
       getModels(function (models) {
-        var dropdownHTML = "";
+        var dropdownHTML = "<option name=\"Switch to another model\"></option>";
         for (var j = 0; j < models.length; j++) {
           var model = models[j];
           var modelName = model.id.split("/").pop();
