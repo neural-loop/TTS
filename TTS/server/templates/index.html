@@ -168,7 +168,6 @@ function updateVoiceDetails() {
               var speakerHTML =
                 '<div class="card">' +
                 '<div class="label-info">' +
-                '<p>' +
                 speaker.speaker_id +
                 ": " +
                 speaker.age +
@@ -178,7 +177,7 @@ function updateVoiceDetails() {
                 speaker.accents +
                 " accent (" +
                 speaker.region +
-                ")</p>" +
+                ")" +
                 "</div>" +
                 '<div class="player">' +
                 '<audio controls>' +
@@ -188,13 +187,6 @@ function updateVoiceDetails() {
                 speaker.speaker_id +
                 '.wav" type="audio/wav">' +
                 "</audio>" +
-                "</div>" +
-                '<div class="select-button">' +
-                '<select id="speaker_id" name="speaker_id" method="GET" action="/">' +
-                '<option value="">' +
-                speaker.speaker_id +
-                "</option>" +
-                "</select>" +
                 "</div>" +
                 "</div>";
               voiceDetailsHTML += speakerHTML;
