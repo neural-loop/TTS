@@ -70,7 +70,7 @@
             <audio id="audio" controls autoplay hidden></audio>
             <p id="message"></p>
             <p id="current-model">Currently evaluating:</p>
-            Jump to: <select id="model-dropdown"></select>
+            <select id="model-dropdown"></select>
         </div>
     </div>
 </div>
@@ -177,7 +177,7 @@ function updateVoiceDetails() {
 
       // Call the getModels function to fetch the models information
       getModels(function (models) {
-        var dropdownHTML = "<option value=''>Jump to...</option>"
+        var dropdownHTML = "<option value=''>Jump to another model...</option>"
         var currentModelPage = getCurrentModelPage();
         for (var j = 0; j < models.length; j++) {
           var model = models[j];
