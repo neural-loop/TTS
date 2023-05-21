@@ -1,74 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="🐸Coqui AI TTS demo server.">
-    <meta name="author" content="🐸Coqui AI TTS">
-    <title>TTS engine</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
-          integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous"
-          rel="stylesheet">
-    <style>
-        .container {
-            height: 100vh; /* Set container height to 100% of viewport height */
-            display: flex; /* Use flexbox layout */
-            overflow: hidden; /* Hide any overflowing content */
-        }
-        .left-column {
-            margin-top: 80px;
-            margin-bottom: 80px;
-            flex: 1; /* Occupy remaining horizontal space */
-            overflow-y: auto; /* Enable vertical scrollbar if content overflows */
-        }
-        .right-column {
-            flex: 1; /* Occupy remaining horizontal space */
-        }
-      .card {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        margin: 10px;
-      }
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="🐸Coqui AI TTS demo server.">
+  <meta name="author" content="🐸Coqui AI TTS">
+  <title>TTS engine</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+        integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous"
+        rel="stylesheet">
+  <style>
+    .voice-details-container {
+      margin-top: 80px;
+      margin-bottom: 80px;
+      overflow-y: auto;
+    }
 
-      .select-button {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-      }
-    </style>
+    .card {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin: 10px;
+    }
+
+    .select-button {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+  </style>
 </head>
-<body>
-<div class="container">
-    <div class="left-column">
 
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-6 col-lg-6">
         <!-- Left Column - Empty Container -->
-        <div id="voice-details-container"></div>
-    </div>
-    <div class="right-column">
-        <div class="text-center">
-            <img class="mt-5" src="{{url_for('static', filename='logo.png')}}" align="middle" width="512"/>
-            <ul class="list-unstyled"></ul>
-            {%if use_gst%}
-            <input value='{"0": 0.1}' id="style_wav" placeholder="style wav (dict or path to wav).." size=45 type="text"
-                   name="style_wav">
-            {%endif%}
-            <input id="text" placeholder="Type here..." size=45 type="text" name="text">
-            <button id="speak-button" name="speak" class="btn btn-primary">Speak</button>
-            <br/><br/>
-            {%if use_multi_speaker%}
-            Choose a speaker:
-                <select id="speaker_id" name=speaker_id method="GET" action="/">
-                  {% for speaker_id in speaker_ids %}
-                    {% if speaker_id.startswith("VCTK_") %}
-                      <option value="{{speaker_id}}" SELECTED>{{speaker_id}}</option>
-                    {% endif %}
-                  {% endfor %}
-                </select><br/><br/>
-            {%endif%}
+        <div class="voice-details-container" id="voice-details-container"></div>
+      </div>
+      <div class="col-md-6 col-lg-6">
+        <div class="text-center mt-5">
+          <img src="{{url_for('static', filename='logo.png')}}" class="img-fluid" width="512" alt="Logo">
+          <ul class="list-unstyled"></ul>
+          {% if use_gst %}
+          <input value='{"0": 0.1}' id="style_wav" placeholder="style wav (dict or path to wav).." size=45 type="text"
+            name="style_wav">
+          {% endif %}
+          <input id="text" placeholder="Type here..." size=45 type="text" name="text">
+          <button id="speak-button" name="speak" class="btn btn-primary">Speak</button>
+          <br><br>
+          {% if use_multi_speaker %}
+          Choose a speaker:
+          <select id="speaker_id" name=speaker_id method="GET" action="/">
+            {% for speaker_id in speaker_ids %}
+            {% if speaker_id.startswith("VCTK_") %}
+            <option value="{{speaker_id}}" SELECTED>{{speaker_id}}</option>
+            {% endif %}
+            {% endfor %}
+          </select>
+          <br><br>
+          {% endif %}
             <!-- Temporary debug statement -->
 <!--            {%if use_multi_language%}-->
 <!--            Choose a language:-->
@@ -79,15 +74,16 @@
 <!--                {% endfor %}-->
 <!--            </select><br/><br/>-->
 <!--            {%endif%}-->
-            <input type="hidden" id="language_id" name="language_id" value="en">
+          <input type="hidden" id="language_id" name="language_id" value="en">
 
-            <audio id="audio" controls autoplay hidden></audio>
-            <p id="message"></p>
-            <p id="current-model">Currently evaluating:</p>
-            <select id="model-dropdown"></select>
+          <audio id="audio" controls autoplay hidden></audio>
+          <p id="message"></p>
+          <p id="current-model">Currently evaluating:</p>
+          <select id="model-dropdown"></select>
         </div>
+      </div>
     </div>
-</div>
+  </div>
 <script>
     function getTextValue(textId) {
         const container = q(textId)
