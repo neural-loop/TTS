@@ -52,4 +52,3 @@ einops
 transformers
 detoxify~=0.5.1
 requests
-```
