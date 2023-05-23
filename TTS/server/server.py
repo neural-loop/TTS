@@ -249,7 +249,7 @@ def get_voices():
 
     # model path
     depath = "model/"
-    depath = ''
+    # depath = ''
     with open(str(depath) + "config.json", "r") as file:
         model_data = json.load(file)
 
