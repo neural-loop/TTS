@@ -53,6 +53,7 @@
   display: flex;
   }
   </style>
+<script type="text/javascript" src="https://www.google.com/recaptcha/api.js?render=6LcAIDMmAAAAABL3yaRbEP12AK-gy56b4S9SN6Mf"></script>  <script type="module" src="static/js/voiceDetails.js"></script>
 </head>
 
 <body>
@@ -104,174 +105,24 @@
       </div>
     </div>
   </div>
-<script>
-    function getTextValue(textId) {
-        const container = q(textId)
-        if (container) {
-            return container.value
-        }
-        return ""
-    }
-    function q(selector) { return document.querySelector(selector) }
-    q('#text').focus()
-    function do_tts(e) {
-        const text = q('#text').value
-        const speaker_id = getTextValue('#speaker_id')
-        const style_wav = getTextValue('#style_wav')
-        const language_id = getTextValue('#language_id')
-        if (text) {
-            q('#message').textContent = 'Synthesizing...'
-            q('#speak-button').disabled = true
-            q('#audio').hidden = true
-            synthesize(text, speaker_id, style_wav, language_id)
-        }
-        e.preventDefault()
-        return false
-    }
-    q('#speak-button').addEventListener('click', do_tts)
-    q('#text').addEventListener('keyup', function (e) {
-        if (e.keyCode == 13) { // enter
-            do_tts(e)
-        }
-    })
-    function synthesize(text, speaker_id = "", style_wav = "", language_id = "") {
-        fetch(`/api/tts?text=${encodeURIComponent(text)}&speaker_id=${encodeURIComponent(speaker_id)}&style_wav=${encodeURIComponent(style_wav)}&language_id=${encodeURIComponent(language_id)}`, { cache: 'no-cache' })
-            .then(function (res) {
-                if (!res.ok) throw Error(res.statusText)
-                return res.blob()
-            }).then(function (blob) {
-                q('#message').textContent = ''
-                q('#speak-button').disabled = false
-                q('#audio').src = URL.createObjectURL(blob)
-                q('#audio').hidden = false
-            }).catch(function (err) {
-                q('#message').textContent = 'Error: ' + err.message
-                q('#speak-button').disabled = false
-            })
-    }
-      // Function to make an AJAX request and update the voice details container
-// Function to make an AJAX request and update the voice details container
-function getModels(callback) {
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", "https://huggingface.co/api/models?author=voices", true);
-  xhr.onload = function () {
-    if (xhr.status === 200) {
-      var models = JSON.parse(xhr.responseText);
-      callback(models);
-    }
-  };
-  xhr.send();
-}
+<script type="module">
+  import helpers from "./static/js/helpers.js";
+  const { q, getTextValue } = helpers;
+  import { runRecaptcha } from "./static/js//tts.js";
 
-function updateVoiceDetails() {
-  // Create a new XMLHttpRequest object
-  var xhr = new XMLHttpRequest();
+  // Add event listener for DOMContentLoaded
+  document.addEventListener("DOMContentLoaded", function() {
+    // Get the speak button element
+    const speakButton = document.getElementById("speak-button");
 
-  // Configure the request
-  xhr.open("GET", "/get_voices", true);
-
-  // Define the callback function to handle the response
-  xhr.onload = function () {
-    if (xhr.status === 200) {
-      // Parse the response as JSON
-      var response = JSON.parse(xhr.responseText);
-
-      // Build the HTML string for the voice details
-            var voiceDetailsHTML = "";
-            for (var i = 0; i < response.length; i++) {
-              var speaker = response[i];
-              var speakerHTML =
-                '<div class="card">' +
-                '<div class="label-info">' +
-                speaker.speaker_id +
-                ": " +
-                speaker.age +
-                " year old " +
-                speaker.gender +
-                ", " +
-                speaker.accents +
-                " accent (" +
-                speaker.region +
-                ")" +
-                "</div>" +
-                '<div class="player">' +
-                '<audio controls>' +
-                '<source src="https://huggingface.co/voices/' +
-                speaker.project +
-                '/resolve/main/samples/' +
-                speaker.speaker_id +
-                '.wav" type="audio/wav">' +
-                "</audio>" +
-                "</div>" +
-                "</div>";
-              voiceDetailsHTML += speakerHTML;
-            }
-
-      // Update the voice details container with the HTML
-      document.getElementById("voice-details-container").innerHTML =
-        voiceDetailsHTML;
-
-      // Call the getModels function to fetch the models information
-      getModels(function (models) {
-        var dropdownHTML = "<option value=''>Jump to another model...</option>"
-        var currentModelPage = getCurrentModelPage();
-        for (var j = 0; j < models.length; j++) {
-          var model = models[j];
-          var modelName = model.id.split("/").pop();
-          if (modelName.startsWith("VCTK_")) {
-            if (modelName !== currentModelPage) {
-              dropdownHTML +=
-                '<option value="' +
-                model.id +
-                '">' +
-                modelName +
-                "</option>";
-            }
-          }
-        }
-
-        // Update the model dropdown with the HTML
-        document.getElementById("model-dropdown").innerHTML = dropdownHTML;
-
-        // Update the current model paragraph
-        document.getElementById("current-model").textContent =
-          "Currently evaluating: " + currentModelPage;
-      });
-    }
-  };
-
-  // Send the request
-  xhr.send();
-}
-
-// Function to handle the model selection change
-function onModelSelectChange() {
-  var selectedModel = document.getElementById("model-dropdown").value;
-  var modelName = selectedModel.split("/").pop();
-  var modelUrl = "https://voices-" + modelName.toLowerCase().replace(/_/g, "-") + ".hf.space/";
-  // Redirect to the selected model page
-  window.location.href = modelUrl;
-}
-
-function getCurrentModelPage() {
-  var currentUrl = window.location.href;
-  var modelPageRegex = /https:\/\/voices-(.*).hf.space/;
-  var match = currentUrl.match(modelPageRegex);
-  if (match && match.length > 1) {
-    var modelName = match[1];
-    return "voices/" + modelName.replace(/-/g, "_");
-  }
-  return "";
-}
-
-// Call the updateVoiceDetails function when the page finishes loading
-window.addEventListener("load", updateVoiceDetails);
-
-// Add event listener to the model dropdown
-document
-  .getElementById("model-dropdown")
-  .addEventListener("change", onModelSelectChange);
-
+    // Add onclick event listener to the speak button
+    speakButton.addEventListener("click", function() {
+      runRecaptcha();
+    });
+  });
 </script>
+<script type="module" src="static/js/tts.js"></script>
+<script type="module" src="static/js/voiceDetails.js"></script>
+
 </body>
 </html>

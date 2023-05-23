@@ -9,16 +9,13 @@ from threading import Lock
 from typing import Union
 from urllib.parse import parse_qs
 
-import pandas as pd
 from detoxify import Detoxify
 
-
 from flask import Flask, render_template, render_template_string, request, send_file, jsonify
-
 from TTS.config import load_config
 from TTS.utils.manage import ModelManager
 from TTS.utils.synthesizer import Synthesizer
-
+import requests # Add this import to handle HTTP requests in Python
 
 def create_argparser():
     def convert_boolean(x):
@@ -130,8 +127,6 @@ language_manager = getattr(synthesizer.tts_model, "language_manager", None)
 # TODO: set this from SpeakerManager
 use_gst = synthesizer.tts_config.get("use_gst", False)
 app = Flask(__name__)
-
-
 def style_wav_uri_to_dict(style_wav: str) -> Union[str, dict]:
     """Transform an uri style_wav, in either a string (path to wav file to be use for style transfer)
     or a dict (gst tokens/values to be use for styling)
@@ -186,6 +181,23 @@ lock = Lock()
 
 @app.route("/api/tts", methods=["GET"])
 def tts():
+    recaptcha_response = request.args.get('recaptcha-response')
+    secret_key = os.getenv("RECAPTCHA_SECRET_KEY"
+
+    # Use the following code block to verify the reCAPTCHA response:
+    recaptcha_api = "https://www.google.com/recaptcha/api/siteverify"
+    recaptcha_data = {
+        "secret": secret_key,
+        "response": recaptcha_response
+    }
+    verification_response = requests.post(recaptcha_api, data=recaptcha_data)
+    verification_result = verification_response.json()
+    success = verification_result.get("success", False)
+    print(success)
+    if not success:
+        return "ReCAPTCHA verification failed.", 400
+    # Continue with your text-to-speech API call
+
     thresholds = {
         'toxicity': 0.4,
         'severe_toxicity': 0.2,
@@ -234,10 +246,14 @@ def mary_tts_api_locales():
 
 @app.route("/get_voices", methods=["GET"])
 def get_voices():
-    with open("model/config.json", "r") as file:
+
+    # model path
+    # depath = "model"
+    depath = ''
+    with open(str(depath) + "config.json", "r") as file:
         model_data = json.load(file)
 
-    with open("model/speakers-log.json", "r") as file:
+    with open(str(depath) + "speakers-log.json", "r") as file:
         speakers_data = json.load(file)
 
     voice_details = []
