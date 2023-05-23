@@ -9,6 +9,10 @@ from threading import Lock
 from typing import Union
 from urllib.parse import parse_qs
 
+import pandas as pd
+from detoxify import Detoxify
+
+
 from flask import Flask, render_template, render_template_string, request, send_file, jsonify
 
 from TTS.config import load_config
@@ -182,24 +186,42 @@ lock = Lock()
 
 @app.route("/api/tts", methods=["GET"])
 def tts():
-    with lock:
-        text = request.args.get("text")
-        speaker_idx = request.args.get("speaker_id", "")
-        language_idx = request.args.get("language_id", "")
-        style_wav = request.args.get("style_wav", "")
-        style_wav = style_wav_uri_to_dict(style_wav)
-        print(f" > Model input: {text}")
-        print(f" > Speaker Idx: {speaker_idx}")
-        print(f" > Language Idx: {language_idx}")
-        wavs = synthesizer.tts(text, speaker_name=speaker_idx, language_name=language_idx, style_wav=style_wav)
-        out = io.BytesIO()
-        synthesizer.save_wav(wavs, out)
-    return send_file(out, mimetype="audio/wav")
+    thresholds = {
+        'toxicity': 0.4,
+        'severe_toxicity': 0.2,
+        'obscene': 0.3,
+        'threat': 0.3,
+        'insult': 0.3,
+        'identity_attack': 0.3
+    }
+    results = Detoxify('original').predict(request.args.get("text"))
+    print(results)
+    if (
+            results['toxicity'] > thresholds['toxicity'] or
+            results['severe_toxicity'] > thresholds['severe_toxicity'] or
+            results['obscene'] > thresholds['obscene'] or
+            results['threat'] > thresholds['threat'] or
+            results['insult'] > thresholds['insult'] or
+            results['identity_attack'] > thresholds['identity_attack']
+    ):
+        return jsonify({"error": "Detected toxic content"}), 400
+    else:
+        with lock:
+            text = request.args.get("text")
+            speaker_idx = request.args.get("speaker_id", "")
+            language_idx = request.args.get("language_id", "")
+            style_wav = request.args.get("style_wav", "")
+            style_wav = style_wav_uri_to_dict(style_wav)
+            print(f" > Model input: {text}")
+            print(f" > Speaker Idx: {speaker_idx}")
+            print(f" > Language Idx: {language_idx}")
+            wavs = synthesizer.tts(text, speaker_name=speaker_idx, language_name=language_idx, style_wav=style_wav)
+            out = io.BytesIO()
+            synthesizer.save_wav(wavs, out)
+        return send_file(out, mimetype="audio/wav")
 
 
 # Basic MaryTTS compatibility layer
-
-
 @app.route("/locales", methods=["GET"])
 def mary_tts_api_locales():
     """MaryTTS-compatible /locales endpoint"""
