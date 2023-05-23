@@ -181,21 +181,21 @@ lock = Lock()
 
 @app.route("/api/tts", methods=["GET"])
 def tts():
-    recaptcha_response = request.args.get('recaptcha-response')
-    secret_key = os.getenv("RECAPTCHA_SECRET_KEY")
-
-    # Use the following code block to verify the reCAPTCHA response:
-    recaptcha_api = "https://www.google.com/recaptcha/api/siteverify"
-    recaptcha_data = {
-        "secret": secret_key,
-        "response": recaptcha_response
-    }
-    verification_response = requests.post(recaptcha_api, data=recaptcha_data)
-    verification_result = verification_response.json()
-    success = verification_result.get("success", False)
-    print(success)
-    if not success:
-        return "ReCAPTCHA verification failed.", 400
+    # recaptcha_response = request.args.get('recaptcha-response')
+    # secret_key = os.getenv("RECAPTCHA_SECRET_KEY")
+    #
+    # # Use the following code block to verify the reCAPTCHA response:
+    # recaptcha_api = "https://www.google.com/recaptcha/api/siteverify"
+    # recaptcha_data = {
+    #     "secret": secret_key,
+    #     "response": recaptcha_response
+    # }
+    # verification_response = requests.post(recaptcha_api, data=recaptcha_data)
+    # verification_result = verification_response.json()
+    # success = verification_result.get("success", False)
+    # print(success)
+    # if not success:
+    #     return "ReCAPTCHA verification failed.", 400
     # Continue with your text-to-speech API call
 
     thresholds = {
@@ -216,7 +216,7 @@ def tts():
             results['insult'] > thresholds['insult'] or
             results['identity_attack'] > thresholds['identity_attack']
     ):
-        return jsonify({"error": "Detected toxic content"}), 400
+        return
     else:
         with lock:
             text = request.args.get("text")
