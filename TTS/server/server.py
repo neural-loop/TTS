@@ -214,7 +214,7 @@ def tts():
             results['insult'] > thresholds['insult'] or
             results['identity_attack'] > thresholds['identity_attack']
     ):
-        return "Bad request", 400
+        return "Input flagged as potentially harmful", 400
     else:
         with lock:
             text = request.args.get("text")
