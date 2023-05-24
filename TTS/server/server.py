@@ -206,7 +206,6 @@ def tts():
         'identity_attack': 0.3
     }
     results = Detoxify('original').predict(request.args.get("text"))
-    print(results)
     if (
             results['toxicity'] > thresholds['toxicity'] or
             results['severe_toxicity'] > thresholds['severe_toxicity'] or
@@ -215,7 +214,7 @@ def tts():
             results['insult'] > thresholds['insult'] or
             results['identity_attack'] > thresholds['identity_attack']
     ):
-        return
+        return "Bad request", 400
     else:
         with lock:
             text = request.args.get("text")
@@ -223,9 +222,6 @@ def tts():
             language_idx = request.args.get("language_id", "")
             style_wav = request.args.get("style_wav", "")
             style_wav = style_wav_uri_to_dict(style_wav)
-            print(f" > Model input: {text}")
-            print(f" > Speaker Idx: {speaker_idx}")
-            print(f" > Language Idx: {language_idx}")
             wavs = synthesizer.tts(text, speaker_name=speaker_idx, language_name=language_idx, style_wav=style_wav)
             out = io.BytesIO()
             synthesizer.save_wav(wavs, out)
