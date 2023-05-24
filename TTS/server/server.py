@@ -193,7 +193,6 @@ def tts():
     verification_response = requests.post(recaptcha_api, data=recaptcha_data)
     verification_result = verification_response.json()
     success = verification_result.get("success", False)
-    print(success)
     if not success:
         return "ReCAPTCHA verification failed.", 400
     # Continue with your text-to-speech API call
