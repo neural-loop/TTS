@@ -71,8 +71,9 @@
           <input value='{"0": 0.1}' id="style_wav" placeholder="style wav (dict or path to wav).." size=45 type="text"
             name="style_wav">
           {% endif %}
-          <input id="text" placeholder="Type here..." size=45 type="text" name="text">
+          <input id="text" placeholder="Type here..." size=45 maxlength="120" type="text" name="text">
           <button id="speak-button" name="speak" class="btn btn-primary">Speak</button>
+          <div id="text-notice">&nbsp;</div>
           <br><br>
           {% if use_multi_speaker %}
           Choose a speaker:
@@ -108,7 +109,7 @@
 <script type="module">
   import helpers from "./static/js/helpers.js";
   const { q, getTextValue } = helpers;
-  import { runRecaptcha } from "./static/js//tts.js";
+  import { runRecaptcha } from "./static/js/tts.js";
 
   // Add event listener for DOMContentLoaded
   document.addEventListener("DOMContentLoaded", function() {
@@ -120,6 +121,7 @@
       runRecaptcha();
     });
   });
+
 </script>
 <script type="module" src="static/js/tts.js"></script>
 <script type="module" src="static/js/voiceDetails.js"></script>

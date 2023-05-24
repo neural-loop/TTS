@@ -184,6 +184,9 @@ def tts():
     recaptcha_response = request.args.get('recaptcha-response')
     secret_key = os.getenv("RECAPTCHA_SECRET_KEY")
 
+    if len(request.args.get("text")) > 120:
+        return "Text is too long.", 400
+
     # Use the following code block to verify the reCAPTCHA response:
     recaptcha_api = "https://www.google.com/recaptcha/api/siteverify"
     recaptcha_data = {
@@ -205,7 +208,12 @@ def tts():
         'insult': 0.3,
         'identity_attack': 0.3
     }
-    results = Detoxify('original').predict(request.args.get("text"))
+
+    if request.args.get("language_id", "") == "en":
+        results = Detoxify('original').predict(request.args.get("text"))
+    else:
+        results = Detoxify('multilingual').predict(request.args.get("text"))
+
     if (
             results['toxicity'] > thresholds['toxicity'] or
             results['severe_toxicity'] > thresholds['severe_toxicity'] or

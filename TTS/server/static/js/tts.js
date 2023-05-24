@@ -32,6 +32,29 @@ q("#text").addEventListener("keyup", function (e) {
   }
 });
 
+q("#text").addEventListener("input", function() {
+  const inputText = this.value;
+  console.log(inputText);
+  // Define the allowed characters
+  const allowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz¯·ßàáâãäæçèéêëìíîïñòóôõöùúûüÿāąćēęěīıłńōőœśūűźżǎǐǒǔабвгдежзийклмнопрстуфхцчшщъыьэюяёєіїґ–!'(),-.:;? ";
+
+  // Check if the input contains any unallowed characters
+  const containsUnallowedChars = [...inputText].some(char => !allowedChars.includes(char));
+
+  if (containsUnallowedChars) {
+    // Display an error message or perform any other action
+    // when unallowed characters are found in the input
+    console.log("Unallowed character found!");
+    q('#text-notice').textContent = "Input character not utilized in model implementation.";
+    q('#speak-button').disabled = true;
+
+  } else {
+    // The input is valid
+    console.log("Input is valid.");
+    q('#text-notice').textContent = "\u00A0";
+    q('#speak-button').disabled = false;
+  }
+});
 
 function synthesize(text, speaker_id = "", style_wav = "", language_id = "", recaptchaToken = "") {
   fetch(
@@ -57,4 +80,5 @@ function synthesize(text, speaker_id = "", style_wav = "", language_id = "", rec
 window.onload = function() {
   // Enable the "speak-button" once the page has completely loaded
   q("#speak-button").disabled = false;
+  console.log("Page loaded.");
 }
