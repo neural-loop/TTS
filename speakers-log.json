@@ -1,0 +1,121 @@
+{
+  "VCTK_p294": {
+    "age": 33,
+    "gender": "F",
+    "accents": "American",
+    "region": "San Francisco",
+    "comments": ""
+  },
+  "VCTK_p297": {
+    "age": 20,
+    "gender": "F",
+    "accents": "American",
+    "region": "New York",
+    "comments": ""
+  },
+  "VCTK_p299": {
+    "age": 25,
+    "gender": "F",
+    "accents": "American",
+    "region": "California",
+    "comments": ""
+  },
+  "VCTK_p300": {
+    "age": 23,
+    "gender": "F",
+    "accents": "American",
+    "region": "California",
+    "comments": ""
+  },
+  "VCTK_p301": {
+    "age": 23,
+    "gender": "F",
+    "accents": "American",
+    "region": "North Carolina",
+    "comments": ""
+  },
+  "VCTK_p305": {
+    "age": 19,
+    "gender": "F",
+    "accents": "American",
+    "region": "Philadelphia",
+    "comments": ""
+  },
+  "VCTK_p306": {
+    "age": 21,
+    "gender": "F",
+    "accents": "American",
+    "region": "New York",
+    "comments": ""
+  },
+  "VCTK_p308": {
+    "age": 18,
+    "gender": "F",
+    "accents": "American",
+    "region": "Alabama",
+    "comments": ""
+  },
+  "VCTK_p310": {
+    "age": 21,
+    "gender": "F",
+    "accents": "American",
+    "region": "Tennessee",
+    "comments": ""
+  },
+  "VCTK_p318": {
+    "age": 32,
+    "gender": "F",
+    "accents": "American",
+    "region": "Napa",
+    "comments": ""
+  },
+  "VCTK_p329": {
+    "age": 23,
+    "gender": "F",
+    "accents": "American",
+    "region": "America",
+    "comments": ""
+  },
+  "VCTK_p330": {
+    "age": 26,
+    "gender": "F",
+    "accents": "American",
+    "region": "America",
+    "comments": ""
+  },
+  "VCTK_p333": {
+    "age": 19,
+    "gender": "F",
+    "accents": "American",
+    "region": "Indiana",
+    "comments": ""
+  },
+  "VCTK_p361": {
+    "age": 19,
+    "gender": "F",
+    "accents": "American",
+    "region": "New Jersey",
+    "comments": ""
+  },
+  "VCTK_p362": {
+    "age": 29,
+    "gender": "F",
+    "accents": "American",
+    "region": "America",
+    "comments": ""
+  },
+  "VCTK_p339": {
+    "age": 21,
+    "gender": "F",
+    "accents": "American",
+    "region": "Pennsylvania",
+    "comments": ""
+  },
+  "VCTK_p341": {
+    "age": 26,
+    "gender": "F",
+    "accents": "American",
+    "region": "Ohio",
+    "comments": ""
+  }
+}

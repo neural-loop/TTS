@@ -251,8 +251,8 @@ def mary_tts_api_locales():
 def get_voices():
 
     # model path
-    depath = "model/"
-    # depath = ''
+    # depath = "model/"
+    depath = ''
     with open(str(depath) + "config.json", "r") as file:
         model_data = json.load(file)
 
@@ -303,6 +303,7 @@ def mary_tts_api_process():
 
 
 def main():
+    print("Starting TTS server..." + str(args))
     app.run(debug=args.debug, host="::", port=args.port)
 
 
